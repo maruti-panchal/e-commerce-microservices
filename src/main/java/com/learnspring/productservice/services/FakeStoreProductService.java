@@ -13,22 +13,27 @@ import java.util.Date;
 
 @Service
 public class FakeStoreProductService implements ProductService{
-    ApplicationConfig restTemplateConfig;
-    public FakeStoreProductService(ApplicationConfig restTemplateConfig){
+    RestTemplate restTemplateConfig;
+
+    public FakeStoreProductService(RestTemplate restTemplateConfig){
         this.restTemplateConfig = restTemplateConfig;
     }
 
 
     @Override
     public ProductModal getSingleProduct(long id) {
-
-        ProductDto productDto=restTemplateConfig.getRestTemplate().getForObject("https://fakestoreapi.com/products/"+id, ProductDto.class);
+        ProductDto productDto= restTemplateConfig.getForObject("https://fakestoreapi.com/products/"+id, ProductDto.class);
         return convertProductDtoToProductModal(productDto);
     }
 
     @Override
     public ArrayList<ProductModal> getAllProducts() {
-        return null;
+        ArrayList<ProductModal> productModals = new ArrayList<>();
+        ProductDto[] productDtos=restTemplateConfig.getForObject("https://fakestoreapi.com/products", ProductDto[].class);
+        for(ProductDto productDto:productDtos){
+            productModals.add(convertProductDtoToProductModal(productDto));
+        }
+        return productModals;
     }
 
     @Override

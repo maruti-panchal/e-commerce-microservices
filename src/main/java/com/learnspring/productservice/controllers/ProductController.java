@@ -24,8 +24,9 @@ public class ProductController {
     }
 
     // get all products
+    @GetMapping()
     public ArrayList<ProductModal> getAllProducts(){
-        return new ArrayList<>();
+        return productService.getAllProducts();
     }
 
     // delete a product
